@@ -1,0 +1,32 @@
+rule "Change Tuner Station"
+
+when
+    Item tunerStation changed
+
+then
+    //KEEP COUNTER CHANGING EACH TIME
+    var Number randomCounter = (Math::random * 88.0).intValue + 10;
+    var Number station = ((tunerStation.state as DecimalType) * 100).intValue;
+    var Number lastStation = ((tunerStationPrevious.state as DecimalType) * 100).intValue;
+    
+    logInfo("Station new:", station.toString());
+    logInfo("Station last:", lastStation.toString());
+    
+
+    if(station > lastStation){
+        logInfo("Seek Up", "working");
+        sendCommand(tunerStationChangeString, "0i81" + randomCounter.toString() + " c4.mt.taseek 01");
+        //Thread::sleep(1000);
+        sendCommand(tunerReconciliationTrigger, randomCounter);
+    }
+    if(station < lastStation){
+        logInfo("Seek Down", "working");
+        sendCommand(tunerStationChangeString, "0i81" + randomCounter.toString() + " c4.mt.taseek 00");
+        //Thread::sleep(1000);
+        sendCommand(tunerReconciliationTrigger, randomCounter);
+    }
+
+        
+
+    
+end

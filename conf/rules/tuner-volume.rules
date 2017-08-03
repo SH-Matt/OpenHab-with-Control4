@@ -1,0 +1,15 @@
+rule "Set Volume"
+
+when
+    Item ampVolume changed
+
+then
+    //THE MATH: DIVIDING BY 2 BECAUSE THE AMP IS SUPER LOUD; ADDING 160 BECAUSE OF THE C4 COMMAND USING A HEX DIGIT THAT IS TWO CHARACTERS BUT SEEMINGLY NEVER SMALLER THAN A0
+    var int volume = (((ampVolume.state as DecimalType) / 2)+160).intValue;
+    var String hexVolume = Integer::toHexString(volume);
+    
+    var String command = "0s2a" + hexVolume + " c4.amp.chvol 01 " + hexVolume;
+    sendCommand(volumeString, command);
+    logInfo("Volume Rule:", command);
+
+end

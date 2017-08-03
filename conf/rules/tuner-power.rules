@@ -1,0 +1,17 @@
+rule "Turn on Tuner"
+
+when
+    Item tunerPowerSwitch changed
+then
+    if(tunerPowerSwitch.state == ON){
+        sendCommand(ampPowerSwitch, ON);
+        sendCommand(ampChannelSelect, ON);
+        sendCommand(ampMuteTunerSwitch, ON);
+    }
+    else{
+        sendCommand(ampPowerSwitch, OFF);
+        sendCommand(ampChannelSelect, OFF);
+        sendCommand(ampMuteTunerSwitch, OFF);
+    }
+   
+end

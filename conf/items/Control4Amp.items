@@ -1,0 +1,24 @@
+
+//SWITCH TO TURN THE RADIO TUNER ON/OFF
+Switch tunerPowerSwitch "Turn on Radio"
+
+//PASS-THROUGH ITEMS TO MANAGE UDP COMMUNICATION WITH COMPONENT TO TURN RADIO TUNER ON/OFF
+Switch ampPowerSwitch {udp=">[ON:10.0.0.186:8750:'0s2a92 c4.amp.digi 01 00'], >[OFF:10.0.0.186:8750:'0s2a93 c4.amp.digi 01 01']"}
+Switch ampChannelSelect "0s2a94 c4.amp.out 01 01" {udp=">[ON:10.0.0.186:8750:'0s2a94 c4.amp.out 01 01'], >[OFF:10.0.0.186:8750:'0s2a95 c4.amp.out 01 01']"}
+Switch ampMuteTunerSwitch {udp=">[ON:10.0.0.186:8750:'0s2a96 c4.amp.mute 01 00'], >[OFF:10.0.0.186:8750:'0s2a97 c4.amp.mute 01 00']"}
+
+//DIMMER TO CONTROL AMP VOLUME
+Dimmer ampVolume "Volume"
+//PASS-THROUGH ITEM TO MANAGE UDP COMMUNICATION WITH AMP. STRING VALUE CREATED IN TUNER-VOLUME.RULES
+String volumeString {udp=">[10.0.0.186:8750:default]"}
+
+//STRING TO LIST THE CURRENTLY PLAYED ARTIST/SONG FROM TUNER
+String songTitle "[%s]"
+//PASS-THROUGH ITEM FOR ARTIST/SONG QUERY
+String songTitleRequestString {udp=">[10.0.0.79:8750:default]"}
+
+Number tunerStation
+Number tunerStationPrevious
+Number tunerReconciliationTrigger
+String tunerStationRequestString {udp=">[10.0.0.79:8750:default]"}
+String tunerStationChangeString {udp=">[10.0.0.79:8750:default]"}

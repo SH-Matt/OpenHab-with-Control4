@@ -1,0 +1,8 @@
+sitemap main label="My home automation" {
+    Frame label="Audio" {
+        Switch item=tunerPowerSwitch
+        Slider item=ampVolume label="Volume" icon="soundvolume"
+        Text item=songTitle label="Song being played: [%s]"
+        Setpoint item=tunerStation label="Station: [%.1f]" minValue=88.0 maxValue=110.0 step=0.2
+    }
+}

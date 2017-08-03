@@ -1,0 +1,39 @@
+rule "UDP Checker"
+
+when
+    Time cron "0 0/1 * 1/1 * ? *" or
+    Item tunerReconciliationTrigger changed
+
+then
+
+    //KEEP COUNTER CHANGING EACH TIME
+    var Number randomCounter = (Math::random * 70.0).intValue + 10;
+    
+    //SEND/RECEIVE SONG INFORMATION; SLEEP APPEARS TO BE NECESSARY TO KEEP VALUE FROM BLEEDING INTO LATER REQUESTS...
+    sendCommand(songTitleRequestString, "0g82" + randomCounter.toString() + " c4.mt.tart 00");
+    Thread::sleep(1000);
+    logInfo("The Fucking Song:", songTitleRequestString.state.toString());
+    var	String[] trimmedString = songTitleRequestString.state.toString().split("\"");
+    logInfo("The Fucking Song:", trimmedString.get(1));
+    //sendCommand(songTitle, trimmedString.get(1));
+    postUpdate(songTitle, trimmedString.get(1));
+    logInfo("The Fucking Song Update?:", songTitle.state.toString());
+
+    //SEND/RECEIVE TUNER LOCATION INFORMATION; SLEEP APPEARS TO BE NECESSARY TO KEEP VALUE FROM BLEEDING INTO LATER REQUESTS...
+    sendCommand(tunerStationRequestString, "0g81" + (randomCounter+1).toString() + " c4.mt.tafreq2");
+    Thread::sleep(1000);
+    //logInfo("The Fucking Tuner:", tunerStationRequestString.state.toString());
+    var	String[] tunerResultString = tunerStationRequestString.state.toString().split(" ");
+    var String tunerSubString = tunerResultString.get(4).substring(0,4)
+    //logInfo("Tuner Check:", tunerSubString);
+    var Number tunerNumber = ((Integer::parseInt(tunerSubString, 16))/10);
+    var Number tunerNumber2 = (tunerNumber / 10);
+    logInfo("Tuner Check:", tunerNumber2.toString());
+    //sendCommand(tunerStation, tunerNumber2);
+    //sendCommand(tunerStationPrevious, tunerNumber2);
+    postUpdate(tunerStation, tunerNumber2);
+    postUpdate(tunerStationPrevious, tunerNumber2);
+    logInfo("Things Updated?:", "Things Updated.");
+    logInfo("The Fucking Tuner Update?:", tunerStation.state.toString());
+
+end
